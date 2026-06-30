@@ -1,0 +1,204 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* UKM Brand Animations */
+  --animate-fade-in: fadeIn 0.3s ease-out forwards;
+  --animate-slide-up: slideUp 0.4s ease-out forwards;
+  --animate-slide-in-right: slideInRight 0.3s ease-out forwards;
+  --animate-shimmer: shimmer 1.5s infinite;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(16px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+}
+
+:root {
+  /* UKM Brand: Neo-Brutalist */
+  --background: oklch(0.98 0 0); /* #F8F9FA ish */
+  --foreground: oklch(0 0 0); /* Black */
+  --card: oklch(1 0 0); /* White */
+  --card-foreground: oklch(0 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0 0 0);
+
+  /* Primary: Blue #0038FF */
+  --primary: oklch(0.45 0.31 264); 
+  --primary-foreground: oklch(1 0 0); /* White */
+
+  /* Secondary: Lime #CCFF00 */
+  --secondary: oklch(0.93 0.2 128); 
+  --secondary-foreground: oklch(0 0 0); /* Black */
+
+  --muted: oklch(0.92 0 0);
+  --muted-foreground: oklch(0.4 0 0);
+  
+  --accent: oklch(0.93 0.2 128); /* Same as secondary */
+  --accent-foreground: oklch(0 0 0);
+
+  --destructive: oklch(0.6 0.25 27);
+  --destructive-foreground: oklch(1 0 0);
+  
+  --border: oklch(0 0 0); /* Solid black borders */
+  --input: oklch(0 0 0);
+  --ring: oklch(0.45 0.31 264); /* Blue focus ring */
+
+  --radius: 1rem; /* Neo-brutalist rounded corners */
+
+  /* Typography */
+  --font-display: "Arial Black", Impact, sans-serif;
+  --font-body: system-ui, -apple-system, sans-serif;
+}
+
+.dark {
+  /* Neo-brutalist is typically light mode only or high contrast invert. For now, matching light. */
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.45 0.31 264);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.93 0.2 128);
+  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.93 0.2 128);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.6 0.25 27);
+  --border: oklch(1 0 0);
+  --input: oklch(1 0 0);
+  --ring: oklch(0.45 0.31 264);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism navbar */
+  .navbar-glass {
+    background: oklch(1 0 0 / 85%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid oklch(0.9 0.012 264 / 60%);
+  }
+
+  /* Gradient mesh background */
+  .hero-gradient {
+    background: 
+      radial-gradient(ellipse 60% 50% at 20% 30%, oklch(0.511 0.234 264 / 12%) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, oklch(0.58 0.22 290 / 10%) 0%, transparent 60%),
+      oklch(0.985 0.002 264);
+  }
+
+  /* Card hover lift */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px oklch(0.511 0.234 264 / 15%);
+  }
+
+  /* Quota bar gradient */
+  .quota-bar-green { background: linear-gradient(90deg, oklch(0.65 0.18 155), oklch(0.72 0.15 145)); }
+  .quota-bar-yellow { background: linear-gradient(90deg, oklch(0.75 0.17 85), oklch(0.72 0.17 75)); }
+  .quota-bar-red { background: linear-gradient(90deg, oklch(0.63 0.24 27), oklch(0.58 0.22 20)); }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    background: linear-gradient(90deg, oklch(0.94 0 0) 25%, oklch(0.97 0 0) 50%, oklch(0.94 0 0) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background: linear-gradient(135deg, oklch(0.511 0.234 264), oklch(0.58 0.22 290));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Status colors */
+  .status-pending { color: oklch(0.62 0.17 85); background: oklch(0.75 0.17 85 / 12%); }
+  .status-accepted { color: oklch(0.52 0.18 155); background: oklch(0.65 0.18 155 / 12%); }
+  .status-rejected { color: oklch(0.55 0.24 27); background: oklch(0.63 0.24 27 / 12%); }
+  .status-waitlist { color: oklch(0.48 0.2 255); background: oklch(0.6 0.2 255 / 12%); }
+  .status-completed { color: oklch(0.48 0.22 290); background: oklch(0.58 0.22 290 / 12%); }
+
+  /* Animate utilities */
+  .animate-fade-in { animation: var(--animate-fade-in); }
+  .animate-slide-up { animation: var(--animate-slide-up); }
+  .animate-slide-in-right { animation: var(--animate-slide-in-right); }
+}
