@@ -4,10 +4,11 @@ import { use } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { mockProkers } from '@/lib/mock-data';
+import { mockProkers, faqItems } from '@/lib/mock-data';
 import { DivisionCard } from '@/components/public/DivisionCard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -208,6 +209,24 @@ export default function DetailProkerPage({ params }: PageProps) {
 
               </Tabs>
             </div>
+
+            {/* FAQ Section */}
+            <div className="bg-white rounded-[2rem] p-8 border border-black/5 shadow-sm mt-8">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Pertanyaan Umum (FAQ)</h2>
+              <Accordion className="w-full">
+                {faqItems.map((faq, index) => (
+                  <AccordionItem key={index} value={`item-${index}`}>
+                    <AccordionTrigger className="text-left font-semibold text-gray-800 text-base py-4">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-gray-600 leading-relaxed pb-4">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+
           </div>
 
           {/* Sidebar */}
