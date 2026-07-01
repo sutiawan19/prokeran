@@ -15,9 +15,9 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0038FF] shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-[#0038FF] shadow-sm">
       <nav className="relative z-20 flex items-center justify-between px-6 py-4 md:px-10 md:py-5 max-w-[1440px] mx-auto w-full">
-        
+
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1 group">
           <div className="bg-white text-black font-black tracking-tight text-xs md:text-sm px-3 py-1.5 rounded-2xl rounded-bl-sm relative shadow-sm group-hover:-translate-y-1 transition-transform">
@@ -50,7 +50,7 @@ export function Navbar() {
 
           {/* Mobile Hamburger */}
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger 
+            <SheetTrigger
               className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors border border-transparent focus:border-white"
               aria-label="Buka menu navigasi"
             >
