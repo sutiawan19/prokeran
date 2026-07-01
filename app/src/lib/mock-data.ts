@@ -433,7 +433,7 @@ export const mockProkers: Proker[] = [
     id: 'proker-001',
     ukm_id: 'ukm-001',
     title: 'MALAM KEAKRABAN',
-    slug: 'proker-kreatif-visual-2026',
+    slug: 'malam-keakraban',
     description: `Program Kerja Malam Keakraban (Makrab) merupakan kegiatan yang bertujuan 
     untuk mempererat hubungan, membangun kekompakan, serta menumbuhkan rasa kekeluargaan antar anggota UKM. 
     Melalui berbagai aktivitas seperti permainan kelompok, diskusi, sesi kebersamaan, dan hiburan, peserta akan saling mengenal lebih dekat serta meningkatkan kerja sama dalam tim. 
@@ -466,7 +466,7 @@ export const mockProkers: Proker[] = [
     id: 'proker-002',
     ukm_id: 'ukm-001',
     title: 'Tahu Connect',
-    slug: 'seminar-nasional-tekno-2026',
+    slug: 'tahu-connect',
     description: `Tahu Connect adalah kegiatan yang bertujuan untuk memperkenalkan anggota baru dengan keluarga besar Tahu Ngoding sekaligus membangun rasa kebersamaan sejak awal bergabung. 
     Melalui berbagai aktivitas interaktif, peserta akan lebih mengenal budaya organisasi, memperluas relasi, serta meningkatkan semangat kolaborasi antar anggota.`,
     banner_url: null,
@@ -495,7 +495,7 @@ export const mockProkers: Proker[] = [
     id: 'proker-003',
     ukm_id: 'ukm-001',
     title: 'Tahu Visit',
-    slug: 'workshop-uiux-bootcamp-2026',
+    slug: 'tahu-visit',
     description: `Tahu Visit merupakan program kerja Tahu Ngoding yang bertujuan untuk memperluas wawasan anggota melalui kegiatan kunjungan ke perusahaan, startup, 
     maupun institusi yang bergerak di bidang teknologi dan industri kreatif. Melalui kegiatan ini, peserta dapat mengenal dunia kerja secara langsung, memahami perkembangan teknologi terkini, 
     serta mendapatkan pengalaman belajar dari para profesional. 
@@ -522,7 +522,7 @@ export const mockProkers: Proker[] = [
     id: 'proker-004',
     ukm_id: 'ukm-001',
     title: 'Tahu Compile',
-    slug: 'pekan-seni-budaya-2025',
+    slug: 'tahu-compile',
     description: `Tahu Compile merupakan program kerja Tahu Ngoding yang diselenggarakan selama bulan suci Ramadhan sebagai wadah untuk mempererat tali silaturahmi serta meningkatkan nilai kebersamaan antar anggota. 
     Kegiatan ini menghadirkan berbagai rangkaian acara seperti buka puasa bersama, kajian inspiratif, berbagi kepada sesama, dan aktivitas kebersamaan lainnya yang menciptakan suasana hangat dan penuh makna. 
     Bergabunglah sebagai panitia Tahu Compile dan berkontribusilah dalam menghadirkan momen Ramadhan yang berkesan bagi keluarga besar Tahu Ngoding.`,
