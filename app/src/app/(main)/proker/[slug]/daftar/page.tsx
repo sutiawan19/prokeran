@@ -187,8 +187,9 @@ function DaftarForm({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
   const initialDivisionId = searchParams.get('divisi') ?? '';
 
-  const proker = mockProkers.find((p) => p.slug === slug);
-  if (!proker) notFound();
+  const prokerData = mockProkers.find((p) => p.slug === slug);
+  if (!prokerData) notFound();
+  const proker = prokerData!;
 
   const [step, setStep] = useState(0);
   const [selectedDivision, setSelectedDivision] = useState<Division | null>(
