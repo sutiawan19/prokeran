@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { mockRegistrationResults } from '@/lib/mock-data';
 import { StatusSearchResult } from '@/types';
@@ -26,6 +26,7 @@ import {
   CheckCircle2,
   Hourglass,
   SearchX,
+  Hash,
 } from 'lucide-react';
 
 function formatDate(dateStr: string): string {
@@ -57,7 +58,10 @@ function ResultCard({
             {result.full_name}
           </p>
           <p className="text-sm font-medium text-gray-500 font-mono mt-1">
-            {result.phone_masked}
+            <span className="inline-flex items-center gap-1.5">
+              <Hash className="w-3.5 h-3.5" />
+              {(result as any).registration_number ?? result.id}
+            </span>
           </p>
         </div>
         <div className="shrink-0">
@@ -138,6 +142,7 @@ function DetailModal({
 
           <div className="rounded-2xl border border-gray-100 divide-y divide-gray-100 overflow-hidden bg-[#F8F9FA]">
             {[
+              { label: 'No. Pendaftaran', value: (result as any).registration_number ?? result.id },
               { label: 'Proker', value: result.proker_title },
               { label: 'Divisi', value: result.division_name },
               { label: 'Tanggal Daftar', value: formatDate(result.registered_at) },
@@ -214,18 +219,36 @@ export default function CekStatusPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [results, setResults] = useState<StatusSearchResult[]>([]);
   const [selectedResult, setSelectedResult] = useState<StatusSearchResult | null>(null);
+  const [localRegs, setLocalRegs] = useState<any[]>([]);
+
+  // Load registrations saved in localStorage
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('registrations') ?? '[]');
+      setLocalRegs(stored);
+    } catch (_) {}
+  }, []);
 
   async function handleSearch() {
-    if (query.trim().length < 3) return;
+    const q = query.trim().toUpperCase();
+    if (q.length < 3) return;
     setIsLoading(true);
     setHasSearched(false);
     await new Promise((r) => setTimeout(r, 800));
-    const filtered = mockRegistrationResults.filter(
-      (r) =>
-        r.full_name.toLowerCase().includes(query.toLowerCase()) ||
-        r.phone_masked.includes(query)
+
+    // Search localStorage registrations first
+    const localMatches = localRegs.filter(
+      (r) => (r.registration_number ?? r.id ?? '').toUpperCase() === q
     );
-    setResults(filtered);
+
+    // Also search mock data by id
+    const mockMatches = mockRegistrationResults.filter(
+      (r) => r.id.toUpperCase() === q
+    );
+
+    // Merge, local takes priority
+    const merged = [...localMatches, ...mockMatches];
+    setResults(merged as StatusSearchResult[]);
     setHasSearched(true);
     setIsLoading(false);
   }
@@ -246,7 +269,7 @@ export default function CekStatusPage() {
             Cek Status Pendaftaran
           </h1>
           <p className="text-gray-500 font-medium max-w-md mx-auto">
-            Masukkan nama lengkap atau nomor HP yang kamu gunakan saat mendaftar.
+            Masukkan nomor pendaftaran yang kamu terima setelah mendaftar.
           </p>
         </div>
 
@@ -255,19 +278,19 @@ export default function CekStatusPage() {
           <div className="space-y-5">
             <div>
               <label htmlFor="status-search" className="block text-sm font-semibold text-gray-700 mb-2">
-                Nama Lengkap atau Nomor HP
+                Nomor Pendaftaran
               </label>
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                 <input
                   id="status-search"
                   type="search"
-                  placeholder="Contoh: Ahmad Fauzi atau 08123456789"
+                  placeholder="Contoh: REG-M3K9XA"
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value.toUpperCase())}
                   onKeyDown={handleKeyDown}
-                  className="w-full bg-[#F8F9FA] border border-black/5 rounded-xl pl-12 pr-4 py-3.5 font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0038FF]/20 focus:border-[#0038FF] transition-all"
-                  aria-label="Masukkan nama atau nomor HP untuk cek status"
+                  className="w-full bg-[#F8F9FA] border border-black/5 rounded-xl pl-12 pr-4 py-3.5 font-mono font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0038FF]/20 focus:border-[#0038FF] transition-all tracking-wider"
+                  aria-label="Masukkan nomor pendaftaran"
                 />
               </div>
             </div>
@@ -292,7 +315,7 @@ export default function CekStatusPage() {
           </div>
 
           <p className="text-xs font-medium text-gray-400 text-center mt-6">
-            Minimal 3 karakter. Nomor HP akan disamarkan demi privasi.
+            Nomor pendaftaran diberikan saat kamu berhasil mendaftar.
           </p>
         </div>
 
@@ -304,7 +327,7 @@ export default function CekStatusPage() {
                 <SearchX className="w-16 h-16 text-gray-300 mb-4" />
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Pendaftaran tidak ditemukan</h3>
                 <p className="text-sm font-medium text-gray-500 mb-8">
-                  Tidak ada pendaftaran atas nama atau nomor "{query}". Pastikan nama/nomor HP yang kamu masukkan sesuai.
+                  Nomor pendaftaran <span className="font-mono font-bold text-gray-700">{query}</span> tidak ditemukan. Pastikan nomor yang kamu masukkan sudah benar.
                 </p>
                 <Link
                   href="/#proker"
