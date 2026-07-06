@@ -304,7 +304,7 @@ export default function CekStatusPage() {
                 <SearchX className="w-16 h-16 text-gray-300 mb-4" />
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Pendaftaran tidak ditemukan</h3>
                 <p className="text-sm font-medium text-gray-500 mb-8">
-                  Tidak ada pendaftaran atas nama atau nomor "{query}". Pastikan nama/nomor HP yang kamu masukkan sesuai.
+                  Tidak ada pendaftaran atas nama atau nomor &quot;{query}&quot;. Pastikan nama/nomor HP yang kamu masukkan sesuai.
                 </p>
                 <Link
                   href="/#proker"
@@ -317,7 +317,7 @@ export default function CekStatusPage() {
             ) : (
               <div className="space-y-6">
                 <p className="text-sm font-bold text-gray-500 text-center mb-6">
-                  Ditemukan {results.length} pendaftaran untuk "{query}"
+                  Ditemukan {results.length} pendaftaran untuk &quot;{query}&quot;
                 </p>
                 {results.map((result, i) => (
                   <div key={result.id} className="animate-in fade-in slide-in-from-bottom-8 duration-500" style={{ animationDelay: `${i * 100}ms` }}>

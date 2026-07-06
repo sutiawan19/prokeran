@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Proker } from '@/types';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { Calendar, Users, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface ProkerCardProps {
   proker: Proker;

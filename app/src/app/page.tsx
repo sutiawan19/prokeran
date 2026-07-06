@@ -23,12 +23,6 @@ const ArrowGreenRight = () => (
   </svg>
 );
 
-const ArrowBlack1 = () => (
-  <svg viewBox="0 0 100 100" className="w-full h-full text-black stroke-current overflow-visible" fill="none" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20,80 Q 40,20 80,40" />
-    <path d="M60,20 L80,40 L50,60" />
-  </svg>
-);
 
 const CircularBadge = () => (
   <div className="relative w-28 h-28 md:w-36 md:h-36 bg-[#CCFF00] rounded-full flex items-center justify-center shadow-xl rotate-12 hover:scale-105 transition-transform cursor-pointer border-[3px] border-black/5">
@@ -83,11 +77,14 @@ export default function LandingPage() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-2">
-          {['Beranda', 'Cek Status', 'Admin'].map((item) => (
-            <Link key={item} href={item === 'Cek Status' ? '/cek-status' : '#'} className="px-4 py-1.5 rounded-full border border-white/30 text-white text-xs font-semibold hover:bg-white/10 transition-colors">
-              {item}
-            </Link>
-          ))}
+          {['Beranda', 'Cek Status', 'Admin'].map((item) => {
+            const href = item === 'Cek Status' ? '/cek-status' : item === 'Admin' ? '/admin' : '/';
+            return (
+              <Link key={item} href={href} className="px-4 py-1.5 rounded-full border border-white/30 text-white text-xs font-semibold hover:bg-white/10 transition-colors">
+                {item}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Connect Button */}
@@ -224,7 +221,7 @@ export default function LandingPage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {mockProkers.map((proker, i) => (
+            {mockProkers.map((proker) => (
               <div key={proker.id} className="bg-[#F8F9FA] rounded-[2rem] p-6 flex flex-col relative h-full min-h-[360px] border-[3px] border-black/5 hover:border-[#0038FF] hover:-translate-y-2 transition-all duration-300 overflow-hidden group">
                 
                 {/* Status Badge */}
@@ -243,6 +240,7 @@ export default function LandingPage() {
                 {/* Banner / Pattern Background */}
                 <div className="absolute top-0 left-0 right-0 h-32 bg-gray-200 overflow-hidden rounded-t-[1.75rem]">
                   {proker.banner_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={proker.banner_url} alt={proker.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full bg-[#0038FF]/10 flex items-center justify-center opacity-50">

@@ -30,6 +30,7 @@ export interface Proker {
   created_at: string;
   updated_at: string;
   divisions?: Division[];
+  location?: string | null;
 }
 
 export interface DocumentationItem {
@@ -106,4 +107,11 @@ export interface StatusSearchResult {
   registered_at: string;
   proker_status: ProkerStatus;
   certificate_code?: string;
+  nim?: string;
+  program_studi?: string;
+  angkatan?: string;
+  email?: string;
+  phone?: string;
+  motivation?: string;
+  experience?: string;
 }

@@ -18,19 +18,6 @@ export function DivisionCard({ division, prokerSlug, registrationClose }: Divisi
 
   const sisa = division.quota - division.filled_quota;
 
-  const badgeText = isFull
-    ? 'Kuota Penuh'
-    : isExpired
-    ? 'Tutup'
-    : sisa <= 3
-    ? `Sisa ${sisa} slot`
-    : `Tersedia`;
-
-  const badgeClass = isFull || isExpired
-    ? 'bg-red-50 text-red-600 border border-red-100'
-    : sisa <= 3
-    ? 'bg-orange-50 text-orange-600 border border-orange-100'
-    : 'bg-green-50 text-green-600 border border-green-100';
 
   return (
     <article
