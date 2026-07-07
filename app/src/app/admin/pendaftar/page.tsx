@@ -210,7 +210,7 @@ export default function ReviewPendaftarPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Semua Divisi</SelectItem>
-                {divisionsOptions.map(div => (
+                {divisionsOptions.map((div: any) => (
                   <SelectItem key={div.id} value={div.name}>{div.name}</SelectItem>
                 ))}
               </SelectContent>
