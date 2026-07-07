@@ -91,10 +91,12 @@ export interface Certificate {
 export interface RegistrationFormData {
   division_id: string;
   full_name: string;
+  nim: string;
   phone: string;
-  email?: string;
-  institution?: string;
+  general_motivation?: string;
+  organization_experience?: string;
   motivation?: string;
+  mc_experience?: string;
 }
 
 export interface StatusSearchResult {

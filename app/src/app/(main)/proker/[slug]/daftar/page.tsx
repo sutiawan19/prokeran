@@ -27,6 +27,7 @@ import {
   CheckCircle2,
   ChevronRight,
   ChevronLeft,
+  ArrowLeft,
   User,
   Phone,
   Mail,
@@ -40,7 +41,7 @@ import {
 import { toast } from 'sonner';
 
 // ── Step Indicator ────────────────────────
-const STEPS = ['Pilih Divisi', 'Isi Data', 'Konfirmasi'];
+const STEPS = ['Pilih Divisi', 'Data Diri', 'Pertanyaan Divisi', 'Konfirmasi'];
 
 function StepIndicator({ current }: { current: number }) {
   return (
@@ -52,19 +53,19 @@ function StepIndicator({ current }: { current: number }) {
           <div key={i} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center gap-2">
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-black border-[3px] border-black transition-all duration-300 ${
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 border-2 ${
                   isCompleted
-                    ? 'bg-[#CCFF00] text-black shadow-[2px_2px_0_0_black]'
+                    ? 'bg-[#0038FF] text-white border-[#0038FF]'
                     : isActive
-                    ? 'bg-[#0038FF] text-white shadow-[2px_2px_0_0_black] scale-110'
-                    : 'bg-white text-black/50'
+                    ? 'bg-[#0038FF] text-white border-[#0038FF] shadow-md scale-110'
+                    : 'bg-white text-gray-400 border-gray-200'
                 }`}
               >
                 {isCompleted ? <CheckCheck className="w-5 h-5" strokeWidth={3} /> : i + 1}
               </div>
               <span
-                className={`text-[10px] font-black uppercase tracking-wider whitespace-nowrap hidden sm:block ${
-                  isActive ? 'text-[#0038FF]' : 'text-black/60'
+                className={`text-[10px] font-bold uppercase tracking-wider whitespace-nowrap hidden sm:block mt-1 ${
+                  isActive ? 'text-[#0038FF]' : 'text-gray-500'
                 }`}
               >
                 {label}
@@ -72,8 +73,8 @@ function StepIndicator({ current }: { current: number }) {
             </div>
             {i < STEPS.length - 1 && (
               <div
-                className={`flex-1 h-[4px] mx-2 transition-all duration-300 rounded-full ${
-                  isCompleted ? 'bg-[#CCFF00] border-y-[2px] border-black' : 'bg-black/10'
+                className={`flex-1 h-[2px] mx-2 transition-all duration-300 rounded-full ${
+                  isCompleted ? 'bg-[#0038FF]' : 'bg-gray-200'
                 }`}
               />
             )}
@@ -105,31 +106,31 @@ function SuccessModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-[#CCFF00] border-[4px] border-black shadow-[12px_12px_0_0_black] p-8 rounded-[2rem]">
+      <DialogContent className="max-w-md bg-white border border-black/5 shadow-lg p-8 rounded-[2rem]">
         <DialogHeader>
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 rounded-full bg-white border-[4px] border-black shadow-[4px_4px_0_0_black] flex items-center justify-center rotate-6 hover:rotate-0 transition-transform">
-              <CheckCircle2 className="w-10 h-10 text-[#0038FF]" strokeWidth={3} />
+            <div className="w-20 h-20 rounded-full bg-green-50 border border-green-100 flex items-center justify-center">
+              <CheckCircle2 className="w-10 h-10 text-green-500" strokeWidth={3} />
             </div>
           </div>
-          <DialogTitle className="text-center text-3xl font-black uppercase">
+          <DialogTitle className="text-center text-2xl font-bold text-gray-900">
             Pendaftaran Sukses!
           </DialogTitle>
-          <DialogDescription className="text-center text-sm font-bold text-black/80 mt-2">
+          <DialogDescription className="text-center text-sm text-gray-500 mt-2">
             Data kamu sudah kami terima dan akan diproses oleh admin.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 pt-4">
-          <div className="rounded-[1.5rem] bg-white border-[3px] border-black p-5 shadow-[4px_4px_0_0_black]">
-            <p className="text-[10px] font-black uppercase text-black/60 mb-2">Nomor Pendaftaran</p>
+          <div className="rounded-[1.5rem] bg-gray-50 border border-black/5 p-5">
+            <p className="text-[10px] font-bold uppercase text-gray-500 mb-2">Nomor Pendaftaran</p>
             <div className="flex items-center justify-between gap-4">
-              <code className="text-xl font-black tracking-widest text-[#0038FF]">
+              <code className="text-lg font-mono font-bold tracking-widest text-[#0038FF]">
                 {regId}
               </code>
               <button
                 onClick={handleCopy}
-                className="p-3 rounded-xl bg-black text-white hover:bg-[#0038FF] hover:scale-105 transition-all shadow-md"
+                className="p-2.5 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-[#0038FF] transition-all shadow-sm"
                 aria-label="Salin nomor pendaftaran"
               >
                 {copied ? (
@@ -141,21 +142,21 @@ function SuccessModal({
             </div>
           </div>
 
-          <p className="text-[10px] font-black uppercase text-center text-black/80 bg-white/50 py-2 rounded-lg">
+          <p className="text-xs text-center text-gray-500 px-4">
             Simpan nomor pendaftaran ini. Kamu bisa cek status kapan saja.
           </p>
 
           <div className="flex flex-col gap-3">
             <Link 
               href="/cek-status"
-              className="flex items-center justify-center bg-[#0038FF] text-white py-4 rounded-xl border-[3px] border-black font-black uppercase shadow-[4px_4px_0_0_black] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+              className="flex items-center justify-center bg-[#0038FF] text-white py-3.5 rounded-xl font-bold shadow-sm hover:shadow-md hover:bg-blue-700 transition-all"
             >
               Cek Status Pendaftaran
-              <ExternalLink className="w-5 h-5 ml-2" strokeWidth={3} />
+              <ExternalLink className="w-5 h-5 ml-2" strokeWidth={2.5} />
             </Link>
             <button 
               onClick={onClose} 
-              className="flex items-center justify-center bg-white text-black py-4 rounded-xl border-[3px] border-black font-black uppercase shadow-[4px_4px_0_0_black] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all"
+              className="flex items-center justify-center bg-white text-gray-700 py-3.5 rounded-xl border border-gray-200 font-bold shadow-sm hover:bg-gray-50 transition-colors"
             >
               Kembali ke Beranda
             </button>
@@ -166,14 +167,29 @@ function SuccessModal({
   );
 }
 
+// ── Helper ────────────────────────────────
+function getDivisionSpecificQuestion(divisionName: string): string {
+  const name = divisionName.toLowerCase();
+  if (name.includes('acara')) return 'Apakah kamu memiliki pengalaman MC atau moderator?';
+  if (name.includes('humas') || name.includes('hubungan')) return 'Apakah kamu memiliki pengalaman melobi pihak eksternal atau mencari sponsorship?';
+  if (name.includes('pdd') || name.includes('publikasi') || name.includes('desain') || name.includes('dokumentasi')) return 'Sebutkan software desain/editing yang kamu kuasai (Sertakan link portofolio jika ada).';
+  if (name.includes('p3k') || name.includes('kesehatan')) return 'Apakah kamu pernah mengikuti pelatihan dasar kesehatan atau PMR?';
+  if (name.includes('logistik') || name.includes('perlengkapan')) return 'Apakah kamu siap bekerja secara fisik dan mengatur inventaris barang?';
+  if (name.includes('konsumsi')) return 'Apakah kamu memiliki pengalaman dalam manajemen konsumsi acara besar?';
+  if (name.includes('liaison') || name.includes('lo')) return 'Apakah kamu memiliki pengalaman mendampingi tamu VIP atau narasumber?';
+  
+  return 'Apa skill utama yang kamu miliki yang berguna untuk divisi ini?';
+}
+
 // ── Main Form Page ────────────────────────
 function DaftarForm({ slug }: { slug: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialDivisionId = searchParams.get('divisi') ?? '';
 
-  const proker = mockProkers.find((p) => p.slug === slug);
-  if (!proker) notFound();
+  const prokerData = mockProkers.find((p) => p.slug === slug);
+  if (!prokerData) notFound();
+  const proker = prokerData!;
 
   const [step, setStep] = useState(0);
   const [selectedDivision, setSelectedDivision] = useState<Division | null>(
@@ -181,78 +197,109 @@ function DaftarForm({ slug }: { slug: string }) {
   );
   const [formData, setFormData] = useState<Partial<RegistrationFormData>>({
     full_name: '',
+    nim: '',
     phone: '',
-    email: '',
-    institution: '',
+    general_motivation: '',
+    organization_experience: '',
     motivation: '',
+    mc_experience: '',
   });
   const [errors, setErrors] = useState<Partial<Record<keyof RegistrationFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [registrationId, setRegistrationId] = useState('');
 
-  const canGoToStep1 = !!selectedDivision;
+  function validateStep0() {
+    if (!selectedDivision) {
+      toast.error('Pilih divisi terlebih dahulu');
+      return false;
+    }
+    return true;
+  }
 
-  function validateStep2() {
+  function validateStep1() {
     const errs: typeof errors = {};
     if (!formData.full_name || formData.full_name.trim().length < 3) {
       errs.full_name = 'Nama lengkap minimal 3 karakter';
     }
+    if (!formData.nim || formData.nim.trim().length < 5) {
+      errs.nim = 'NIM minimal 5 karakter';
+    }
     if (!formData.phone || !/^(\+62|62|0)[0-9]{8,12}$/.test(formData.phone.replace(/\s/g, ''))) {
       errs.phone = 'Format nomor HP tidak valid (contoh: 08123456789)';
     }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errs.email = 'Format email tidak valid';
+    if (!formData.general_motivation || formData.general_motivation.trim().length < 5) {
+      errs.general_motivation = 'Harap isi alasan bergabung';
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  }
+
+  function validateStep2() {
+    const errs: typeof errors = {};
+    if (!formData.organization_experience || formData.organization_experience.trim().length < 5) {
+      errs.organization_experience = 'Harap isi pengalaman organisasi';
+    }
+    if (!formData.motivation || formData.motivation.trim().length < 5) {
+      errs.motivation = 'Harap isi alasan bergabung divisi';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
 
   function handleNext() {
-    if (step === 0 && canGoToStep1) setStep(1);
-    if (step === 1 && validateStep2()) setStep(2);
+    if (step === 0 && validateStep0()) setStep(1);
+    else if (step === 1 && validateStep1()) setStep(2);
+    else if (step === 2 && validateStep2()) setStep(3);
   }
 
   async function handleSubmit() {
     setIsSubmitting(true);
     await new Promise((r) => setTimeout(r, 1500));
     const regId = `REG-${Date.now().toString(36).toUpperCase()}`;
+
+    // Save to localStorage so cek-status can look it up
+    const saved = {
+      id: regId,
+      registration_number: regId,
+      full_name: formData.full_name,
+      nim: formData.nim,
+      phone: formData.phone,
+      phone_masked: formData.phone
+        ? formData.phone.replace(/.(?=.{4})/g, '•')
+        : '',
+      proker_title: proker.title,
+      proker_slug: slug,
+      division_name: selectedDivision?.name ?? '',
+      status: 'pending',
+      registered_at: new Date().toISOString(),
+      proker_status: proker.status ?? 'ongoing',
+      certificate_code: undefined,
+    };
+    try {
+      const existing = JSON.parse(localStorage.getItem('registrations') ?? '[]');
+      existing.push(saved);
+      localStorage.setItem('registrations', JSON.stringify(existing));
+    } catch (_) {}
+
     setRegistrationId(regId);
     setIsSubmitting(false);
     setSuccessModalOpen(true);
   }
 
   // Common input styling
-  const inputClass = "w-full bg-white border-[3px] border-black rounded-xl px-4 py-3 font-bold text-black focus:outline-none focus:ring-0 focus:border-[#0038FF] shadow-[4px_4px_0_0_black] focus:shadow-[2px_2px_0_0_#0038FF] transition-all";
-  const labelClass = "block text-xs font-black uppercase mb-2";
+  const inputClass = "w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0038FF]/20 focus:border-[#0038FF] transition-all shadow-sm";
+  const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-12">
-      {/* Breadcrumb */}
-      <div className="mb-8 bg-white border-[3px] border-black shadow-[4px_4px_0_0_black] inline-block px-4 py-2 rounded-xl">
-        <Breadcrumb>
-          <BreadcrumbList className="font-bold text-black uppercase tracking-wider text-[10px] sm:text-xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/proker/${slug}`}>{proker.title}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Pendaftaran</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+    <div className="max-w-3xl mx-auto px-6 pt-32 pb-12">
 
-      <div className="bg-[#F8F9FA] border-[4px] border-black shadow-[8px_8px_0_0_black] rounded-[2rem] p-8 md:p-12">
-        <h1 className="text-3xl md:text-5xl font-black uppercase text-center leading-tight mb-2">
-          Daftar ke {proker.title}
+      <div className="bg-white border border-black/5 shadow-sm rounded-[2rem] p-8 md:p-12">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 text-center leading-tight mb-2">
+          Daftar Kepanitiaan {proker.title}
         </h1>
-        <p className="text-sm font-bold text-black/60 text-center uppercase mb-10">
-          Pendaftaran gratis & tanpa login. Cukup isi data dirimu.
+        <p className="text-sm md:text-base text-gray-500 text-center mb-10">
+          Isi data dirimu dan jadilah bagian dari panitia {proker.title}.
         </p>
 
         <StepIndicator current={step} />
@@ -260,10 +307,10 @@ function DaftarForm({ slug }: { slug: string }) {
         {/* ── Step 0: Pilih Divisi ─────────── */}
         {step === 0 && (
           <div className="space-y-6">
-            <h2 className="font-black text-xl uppercase text-center mb-6">
+            <h2 className="font-bold text-xl text-gray-900 text-center mb-6">
               Pilih Divisi yang Kamu Minati
             </h2>
-            <div className="grid gap-4">
+            <div className="grid gap-4 mt-2">
               {proker.divisions?.map((div) => {
                 const isFull = div.filled_quota >= div.quota;
                 const isSelected = selectedDivision?.id === div.id;
@@ -272,30 +319,30 @@ function DaftarForm({ slug }: { slug: string }) {
                     key={div.id}
                     onClick={() => !isFull && setSelectedDivision(div)}
                     disabled={isFull}
-                    className={`w-full text-left rounded-2xl border-[3px] p-6 transition-all duration-300 ${
+                    className={`w-full text-left rounded-2xl border p-6 transition-all duration-200 ${
                       isSelected
-                        ? 'border-black bg-[#CCFF00] shadow-[6px_6px_0_0_black] -translate-y-1'
+                        ? 'border-[#0038FF] bg-blue-50/50 shadow-sm ring-1 ring-[#0038FF]'
                         : isFull
-                        ? 'border-black/20 bg-gray-100 opacity-60 cursor-not-allowed'
-                        : 'border-black bg-white hover:bg-[#CCFF00]/50 shadow-[4px_4px_0_0_black] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_black] cursor-pointer'
+                        ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
+                        : 'border-gray-200 bg-white hover:border-[#0038FF]/30 hover:bg-gray-50 shadow-sm cursor-pointer'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <div>
-                        <p className="font-black text-xl uppercase text-black">
+                        <p className={`font-bold text-lg ${isSelected ? 'text-[#0038FF]' : 'text-gray-900'}`}>
                           {div.name}
                         </p>
-                        <p className="text-sm font-bold text-black/70 mt-1 line-clamp-2">
+                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">
                           {div.description}
                         </p>
                       </div>
                       <div className="shrink-0 mt-1">
                         {isSelected ? (
-                          <div className="w-8 h-8 rounded-full bg-[#0038FF] border-[2px] border-black flex items-center justify-center">
-                            <CheckCheck className="w-5 h-5 text-white" strokeWidth={3} />
+                          <div className="w-6 h-6 rounded-full bg-[#0038FF] flex items-center justify-center">
+                            <CheckCheck className="w-4 h-4 text-white" strokeWidth={3} />
                           </div>
                         ) : (
-                          <div className="w-8 h-8 rounded-full border-[3px] border-black bg-white" />
+                          <div className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white" />
                         )}
                       </div>
                     </div>
@@ -305,23 +352,29 @@ function DaftarForm({ slug }: { slug: string }) {
               })}
             </div>
 
-            <div className="pt-6">
+            <div className="flex gap-4 pt-6">
+              <Link
+                href={`/proker/${slug}`}
+                className="bg-white text-gray-700 px-6 py-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex items-center justify-center shadow-sm"
+              >
+                <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
+              </Link>
               <button
                 onClick={handleNext}
-                disabled={!canGoToStep1}
-                className="w-full bg-[#0038FF] disabled:opacity-50 text-white py-4 rounded-xl border-[3px] border-black font-black uppercase text-lg shadow-[6px_6px_0_0_black] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] hover:bg-black transition-all flex justify-center items-center"
+                disabled={!selectedDivision}
+                className="flex-1 bg-[#0038FF] text-white py-4 rounded-xl font-bold text-lg shadow-sm hover:shadow-md hover:bg-blue-700 transition-all flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Lanjut Isi Data
-                <ChevronRight className="w-6 h-6 ml-2" strokeWidth={3} />
+                <ChevronRight className="w-5 h-5 ml-2" strokeWidth={2.5} />
               </button>
             </div>
           </div>
         )}
 
-        {/* ── Step 1: Isi Data ─────────────── */}
+        {/* ── Step 1: Data Diri ─────────── */}
         {step === 1 && (
           <div className="space-y-6">
-            <h2 className="font-black text-xl uppercase text-center mb-6">
+            <h2 className="font-bold text-xl text-gray-900 text-center mb-6">
               Lengkapi Data Dirimu
             </h2>
             <div className="space-y-5">
@@ -337,52 +390,37 @@ function DaftarForm({ slug }: { slug: string }) {
                     placeholder="Budi Santoso"
                   />
                 </div>
-                {errors.full_name && <p className="text-red-500 text-xs font-bold mt-2 uppercase">{errors.full_name}</p>}
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className={labelClass}>Nomor WhatsApp *</label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-3.5 w-5 h-5 text-black/40" />
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className={`${inputClass} pl-12`}
-                      placeholder="08123456789"
-                    />
-                  </div>
-                  {errors.phone && <p className="text-red-500 text-xs font-bold mt-2 uppercase">{errors.phone}</p>}
-                </div>
-                <div>
-                  <label className={labelClass}>Email (Opsional)</label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-3.5 w-5 h-5 text-black/40" />
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={`${inputClass} pl-12`}
-                      placeholder="budi@example.com"
-                    />
-                  </div>
-                  {errors.email && <p className="text-red-500 text-xs font-bold mt-2 uppercase">{errors.email}</p>}
-                </div>
+                {errors.full_name && <p className="text-red-500 text-xs font-medium mt-1.5">{errors.full_name}</p>}
               </div>
 
               <div>
-                <label className={labelClass}>Asal Institusi/Fakultas (Opsional)</label>
+                <label className={labelClass}>NIM (Nomor Induk Mahasiswa) *</label>
                 <div className="relative">
                   <Building className="absolute left-4 top-3.5 w-5 h-5 text-black/40" />
                   <input
                     type="text"
-                    value={formData.institution}
-                    onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+                    value={formData.nim}
+                    onChange={(e) => setFormData({ ...formData, nim: e.target.value })}
                     className={`${inputClass} pl-12`}
-                    placeholder="Fakultas Ilmu Komputer"
+                    placeholder="23010..."
                   />
                 </div>
+                {errors.nim && <p className="text-red-500 text-xs font-medium mt-1.5">{errors.nim}</p>}
+              </div>
+
+              <div>
+                <label className={labelClass}>Nomor WhatsApp *</label>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-3.5 w-5 h-5 text-black/40" />
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className={`${inputClass} pl-12`}
+                    placeholder="08123456789"
+                  />
+                </div>
+                {errors.phone && <p className="text-red-500 text-xs font-medium mt-1.5">{errors.phone}</p>}
               </div>
 
               <div>
@@ -390,10 +428,83 @@ function DaftarForm({ slug }: { slug: string }) {
                 <div className="relative">
                   <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-black/40" />
                   <textarea
+                    value={formData.general_motivation}
+                    onChange={(e) => setFormData({ ...formData, general_motivation: e.target.value })}
+                    className={`${inputClass} pl-12 min-h-[120px]`}
+                    placeholder="Saya ingin belajar dan berkontribusi di kegiatan ini..."
+                  />
+                </div>
+                {errors.general_motivation && <p className="text-red-500 text-xs font-medium mt-1.5">{errors.general_motivation}</p>}
+              </div>
+            </div>
+
+            <div className="flex gap-4 pt-6">
+              <button
+                onClick={() => setStep(0)}
+                className="bg-white text-gray-700 px-6 py-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex items-center justify-center shadow-sm"
+              >
+                <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
+              </button>
+              <button
+                onClick={handleNext}
+                className="flex-1 bg-[#0038FF] text-white py-4 rounded-xl font-bold text-lg shadow-sm hover:shadow-md hover:bg-blue-700 transition-all flex justify-center items-center"
+              >
+                Lanjut Pertanyaan Divisi
+                <ChevronRight className="w-5 h-5 ml-2" strokeWidth={2.5} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Step 2: Pertanyaan Divisi ─────────────── */}
+        {step === 2 && (
+          <div className="space-y-6">
+            <h2 className="font-bold text-xl text-gray-900 text-center mb-6">
+              Pertanyaan Divisi
+            </h2>
+            
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div>
+                <label className={labelClass}>1. Apa pengalaman berorganisasi yang pernah kamu ikuti? *</label>
+                <div className="relative">
+                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-black/40" />
+                  <textarea
+                    value={formData.organization_experience}
+                    onChange={(e) => setFormData({ ...formData, organization_experience: e.target.value })}
+                    className={`${inputClass} pl-12 min-h-[120px]`}
+                    placeholder="Sebutkan pengalaman organisasimu..."
+                  />
+                </div>
+                {errors.organization_experience && <p className="text-red-500 text-xs font-medium mt-1.5">{errors.organization_experience}</p>}
+              </div>
+
+              <div>
+                <label className={labelClass}>
+                  2. Mengapa kamu tertarik bergabung di Divisi {selectedDivision?.name}? *
+                </label>
+                <div className="relative">
+                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-black/40" />
+                  <textarea
                     value={formData.motivation}
                     onChange={(e) => setFormData({ ...formData, motivation: e.target.value })}
                     className={`${inputClass} pl-12 min-h-[120px]`}
-                    placeholder="Saya ingin belajar dan berkontribusi di bidang ini..."
+                    placeholder="Alasan saya tertarik adalah..."
+                  />
+                </div>
+                {errors.motivation && <p className="text-red-500 text-xs font-medium mt-1.5">{errors.motivation}</p>}
+              </div>
+
+              <div>
+                <label className={labelClass}>
+                  3. {selectedDivision ? getDivisionSpecificQuestion(selectedDivision.name) : 'Pertanyaan Tambahan'} (Opsional)
+                </label>
+                <div className="relative">
+                  <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-black/40" />
+                  <textarea
+                    value={formData.mc_experience}
+                    onChange={(e) => setFormData({ ...formData, mc_experience: e.target.value })}
+                    className={`${inputClass} pl-12 min-h-[100px]`}
+                    placeholder="Jawabanmu..."
                   />
                 </div>
               </div>
@@ -401,53 +512,66 @@ function DaftarForm({ slug }: { slug: string }) {
 
             <div className="flex gap-4 pt-6">
               <button
-                onClick={() => setStep(0)}
-                className="bg-white text-black px-6 py-4 rounded-xl border-[3px] border-black font-black uppercase shadow-[4px_4px_0_0_black] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all flex items-center justify-center"
+                onClick={() => setStep(1)}
+                className="bg-white text-gray-700 px-6 py-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex items-center justify-center shadow-sm"
               >
-                <ChevronLeft className="w-6 h-6" strokeWidth={3} />
+                <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
               </button>
               <button
                 onClick={handleNext}
-                className="flex-1 bg-[#0038FF] text-white py-4 rounded-xl border-[3px] border-black font-black uppercase text-lg shadow-[6px_6px_0_0_black] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] hover:bg-black transition-all flex justify-center items-center"
+                className="flex-1 bg-[#0038FF] text-white py-4 rounded-xl font-bold text-lg shadow-sm hover:shadow-md hover:bg-blue-700 transition-all flex justify-center items-center"
               >
                 Review Data
-                <ChevronRight className="w-6 h-6 ml-2" strokeWidth={3} />
+                <ChevronRight className="w-5 h-5 ml-2" strokeWidth={2.5} />
               </button>
             </div>
           </div>
         )}
 
-        {/* ── Step 2: Konfirmasi ───────────── */}
-        {step === 2 && (
+        {/* ── Step 3: Konfirmasi ───────────── */}
+        {step === 3 && (
           <div className="space-y-6">
-            <div className="bg-[#CCFF00] border-[3px] border-black rounded-[1.5rem] p-6 shadow-[6px_6px_0_0_black]">
-              <h3 className="font-black text-xl uppercase mb-4 border-b-[3px] border-black pb-2">Review Pendaftaran</h3>
+            <div className="bg-gray-50 border border-black/5 rounded-[1.5rem] p-6">
+              <h3 className="font-bold text-xl text-gray-900 mb-4 border-b border-gray-200 pb-3">Review Pendaftaran</h3>
               
-              <div className="space-y-4 font-bold text-sm">
+              <div className="space-y-4 text-sm">
                 <div>
-                  <span className="block text-[10px] uppercase text-black/60 mb-1">Pilihan Divisi</span>
-                  <span className="inline-block bg-white border-[2px] border-black px-3 py-1 rounded-md">{selectedDivision?.name}</span>
+                  <span className="block text-xs text-gray-500 mb-1">Pilihan Divisi</span>
+                  <span className="inline-block bg-blue-100 text-[#0038FF] font-medium px-3 py-1 rounded-md">{selectedDivision?.name}</span>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div>
-                    <span className="block text-[10px] uppercase text-black/60 mb-1">Nama Lengkap</span>
-                    <span>{formData.full_name}</span>
+                    <span className="block text-xs text-gray-500 mb-1">Nama Lengkap</span>
+                    <span className="font-medium">{formData.full_name}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] uppercase text-black/60 mb-1">No. WhatsApp</span>
-                    <span>{formData.phone}</span>
+                    <span className="block text-xs text-gray-500 mb-1">NIM</span>
+                    <span className="font-medium">{formData.nim}</span>
                   </div>
-                  {formData.email && (
+                  <div className="col-span-2">
+                    <span className="block text-xs text-gray-500 mb-1">No. WhatsApp</span>
+                    <span className="font-medium">{formData.phone}</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200 mt-4">
+                  <div className="mb-4">
+                    <span className="block text-xs text-gray-500 mb-1">Alasan Bergabung Proker</span>
+                    <p className="whitespace-pre-wrap leading-relaxed text-gray-700 bg-white p-3.5 rounded-xl border border-gray-200 mt-2 shadow-sm">{formData.general_motivation}</p>
+                  </div>
+                  <div className="mb-4">
+                    <span className="block text-xs text-gray-500 mb-1">Pengalaman Organisasi</span>
+                    <p className="whitespace-pre-wrap leading-relaxed text-gray-700 bg-white p-3.5 rounded-xl border border-gray-200 mt-2 shadow-sm">{formData.organization_experience}</p>
+                  </div>
+                  <div className="mb-4">
+                    <span className="block text-xs text-gray-500 mb-1">Alasan Bergabung Divisi</span>
+                    <p className="whitespace-pre-wrap leading-relaxed text-gray-700 bg-white p-3.5 rounded-xl border border-gray-200 mt-2 shadow-sm">{formData.motivation}</p>
+                  </div>
+                  {formData.mc_experience && (
                     <div>
-                      <span className="block text-[10px] uppercase text-black/60 mb-1">Email</span>
-                      <span className="break-all">{formData.email}</span>
-                    </div>
-                  )}
-                  {formData.institution && (
-                    <div className="col-span-2">
-                      <span className="block text-[10px] uppercase text-black/60 mb-1">Institusi</span>
-                      <span>{formData.institution}</span>
+                      <span className="block text-xs text-gray-500 mb-1">Pertanyaan Tambahan Divisi</span>
+                      <p className="whitespace-pre-wrap leading-relaxed text-gray-700 bg-white p-3.5 rounded-xl border border-gray-200 mt-2 shadow-sm">{formData.mc_experience}</p>
                     </div>
                   )}
                 </div>
@@ -456,25 +580,25 @@ function DaftarForm({ slug }: { slug: string }) {
 
             <div className="flex gap-4 pt-6">
               <button
-                onClick={() => setStep(1)}
+                onClick={() => setStep(2)}
                 disabled={isSubmitting}
-                className="bg-white text-black px-6 py-4 rounded-xl border-[3px] border-black font-black uppercase shadow-[4px_4px_0_0_black] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all flex items-center justify-center disabled:opacity-50"
+                className="bg-white text-gray-700 px-6 py-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex items-center justify-center shadow-sm disabled:opacity-50"
               >
-                <ChevronLeft className="w-6 h-6" strokeWidth={3} />
+                <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex-1 bg-[#FF3366] text-white py-4 rounded-xl border-[3px] border-black font-black uppercase text-lg shadow-[6px_6px_0_0_black] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] hover:bg-black transition-all flex justify-center items-center disabled:opacity-50"
+                className="flex-1 bg-[#0038FF] text-white py-4 rounded-xl font-bold text-lg shadow-sm hover:shadow-md hover:bg-blue-700 transition-all flex justify-center items-center disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-6 h-6 mr-2 animate-spin" /> MENGIRIM...
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" /> MENGIRIM...
                   </>
                 ) : (
                   <>
                     Kirim Pendaftaran
-                    <CheckCircle2 className="w-6 h-6 ml-2" strokeWidth={3} />
+                    <CheckCircle2 className="w-5 h-5 ml-2" strokeWidth={2.5} />
                   </>
                 )}
               </button>
