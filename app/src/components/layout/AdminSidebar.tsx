@@ -7,7 +7,6 @@ import {
   LayoutDashboard, 
   FolderKanban, 
   Users, 
-  Settings,
   LogOut
 } from 'lucide-react';
 
@@ -27,11 +26,6 @@ const menuItems = [
     href: '/admin/pendaftar',
     icon: Users,
   },
-  {
-    title: 'Pengaturan',
-    href: '/admin/pengaturan',
-    icon: Settings,
-  },
 ];
 
 export function AdminSidebar() {
@@ -47,30 +41,32 @@ export function AdminSidebar() {
 
   return (
     <div className="w-64 border-r bg-white h-screen flex flex-col sticky top-0 hidden md:flex">
-      <div className="p-6 border-b">
-        <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[#0038FF] rounded-lg flex items-center justify-center">
-            <span className="text-white font-black text-sm">PR</span>
+      <div className="p-6 border-b border-gray-200">
+        <Link href="/admin" className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-black rounded-md flex items-center justify-center">
+            <span className="text-white font-semibold text-xs tracking-wider">PR</span>
           </div>
-          <span className="font-black text-xl tracking-tight text-black">
-            PROKERAN
+          <span className="font-semibold text-lg tracking-tight text-gray-900">
+            Prokeran
           </span>
         </Link>
-        <p className="text-xs font-medium text-black/50 mt-1 uppercase tracking-wider">Admin Panel</p>
+        <p className="text-[11px] font-medium text-gray-400 mt-2 uppercase tracking-widest">Admin Panel</p>
       </div>
 
       <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const isActive = item.href === '/admin' 
+            ? pathname === '/admin' 
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm",
+                "flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 font-medium text-sm",
                 isActive 
-                  ? "bg-[#0038FF] text-white shadow-md shadow-[#0038FF]/20" 
-                  : "text-black/60 hover:bg-black/5 hover:text-black"
+                  ? "bg-zinc-100 text-zinc-900 font-semibold" 
+                  : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -80,10 +76,10 @@ export function AdminSidebar() {
         })}
       </div>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t border-gray-200">
         <button 
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-bold text-sm text-red-500 hover:bg-red-50 cursor-pointer"
+          className="w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 font-medium text-sm text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
         >
           <LogOut className="w-5 h-5" />
           Keluar

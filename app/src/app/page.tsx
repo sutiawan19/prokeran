@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { mockProkers } from '@/lib/mock-data';
 import { Search, Calendar, Users } from 'lucide-react';
 
 // --- Custom SVG Components for Hand-Drawn Accents ---
@@ -48,6 +47,14 @@ const CircularBadge = () => (
 export default function LandingPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [prokers, setProkers] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/prokers')
+      .then(res => res.json())
+      .then(data => setProkers(data))
+      .catch(err => console.error(err));
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,16 +150,16 @@ export default function LandingPage() {
 
           </div>
 
-          {/* Absolute Overlays (Search Box, Arrows, Badge) */}
-          <div className="absolute inset-0 w-full h-full pointer-events-none">
+          {/* Overlays (Search Box, Arrows, Badge) */}
+          <div className="static md:absolute md:inset-0 w-full h-full pointer-events-none flex flex-col items-center gap-8 md:gap-0 md:block mt-12 md:mt-0">
             
             {/* Floating Glass Card 1 (Bottom Left) -> Replaced with Search Box */}
             <motion.div 
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute bottom-[5%] left-[5%] md:left-[20%] z-40 pointer-events-auto"
+              className="relative md:absolute md:bottom-[5%] md:left-[20%] z-40 pointer-events-auto w-full px-4 md:px-0 md:w-auto"
             >
-              <div className="w-[300px] md:w-[350px] bg-white/20 backdrop-blur-md border border-white/40 rounded-[2rem] p-5 shadow-2xl rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+              <div className="w-full md:w-[420px] bg-white/20 backdrop-blur-md border border-white/40 rounded-[2rem] p-5 shadow-2xl md:rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
                 <h3 className="text-white font-bold mb-3 text-lg">Cek Status Pendaftaran</h3>
                 <form onSubmit={handleSearch} className="relative flex items-center">
                   <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -162,8 +169,8 @@ export default function LandingPage() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Nama Lengkap / No. HP..."
-                    className="w-full bg-white/10 border border-white/30 text-white placeholder-white/50 rounded-full py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-[#CCFF00] focus:border-transparent transition-all"
+                    placeholder="Cari Nomor Pendaftaran..."
+                    className="w-full bg-white/10 border border-white/30 text-white placeholder-white/50 rounded-full py-3 pl-10 pr-20 focus:outline-none focus:ring-2 focus:ring-[#CCFF00] focus:border-transparent transition-all"
                   />
                   <button type="submit" className="absolute right-1.5 top-1.5 bottom-1.5 bg-[#CCFF00] text-[#0038FF] hover:bg-white font-bold rounded-full px-4 text-sm transition-colors">
                     Cek
@@ -176,9 +183,9 @@ export default function LandingPage() {
             <motion.div 
               animate={{ y: [0, -20, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute top-[15%] right-[5%] md:right-[22%] z-30 pointer-events-auto"
+              className="relative md:absolute md:top-[15%] md:right-[22%] z-30 pointer-events-auto hidden sm:block"
             >
-              <div className="w-40 md:w-52 aspect-[3/3.5] bg-white/20 backdrop-blur-md border border-white/40 rounded-[2rem] p-5 flex flex-col items-center justify-center rotate-[12deg] shadow-2xl hover:rotate-0 transition-transform duration-500">
+              <div className="w-40 md:w-52 aspect-[3/3.5] bg-white/20 backdrop-blur-md border border-white/40 rounded-[2rem] p-5 flex flex-col items-center justify-center md:rotate-[12deg] shadow-2xl hover:rotate-0 transition-transform duration-500">
                 <div className="w-16 h-16 md:w-24 md:h-24 bg-[#CCFF00] rounded-full flex items-center justify-center mb-4 shadow-inner border-[3px] border-white/50 overflow-hidden text-4xl">
                   🚀
                 </div>
@@ -190,17 +197,17 @@ export default function LandingPage() {
             </motion.div>
 
             {/* Decorative Arrow Left */}
-            <div className="absolute bottom-[0%] left-[0%] md:left-[10%] w-24 h-24 md:w-32 md:h-32 z-20">
+            <div className="hidden md:block absolute bottom-[0%] left-[10%] w-32 h-32 z-20">
               <ArrowGreenLeft />
             </div>
 
             {/* Decorative Arrow Right */}
-            <div className="absolute top-[5%] right-[0%] md:right-[10%] w-24 h-24 md:w-32 md:h-32 z-20">
+            <div className="hidden md:block absolute top-[5%] right-[10%] w-32 h-32 z-20">
               <ArrowGreenRight />
             </div>
 
             {/* Circular Badge */}
-            <div className="absolute bottom-[-10%] right-[0%] md:right-[15%] z-40 pointer-events-auto">
+            <div className="relative md:absolute md:bottom-[-10%] md:right-[15%] z-40 pointer-events-auto">
               <Link href="#proker">
                 <CircularBadge />
               </Link>
@@ -221,7 +228,7 @@ export default function LandingPage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {mockProkers.map((proker) => (
+            {prokers.map((proker) => (
               <div key={proker.id} className="bg-[#F8F9FA] rounded-[2rem] p-6 flex flex-col relative h-full min-h-[360px] border-[3px] border-black/5 hover:border-[#0038FF] hover:-translate-y-2 transition-all duration-300 overflow-hidden group">
                 
                 {/* Status Badge */}

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { mockRegistrationResults } from '@/lib/mock-data';
 import { StatusSearchResult } from '@/types';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import {
@@ -84,25 +83,26 @@ function ResultCard({
         </div>
       </div>
 
-      {/* Action hints */}
-      {result.status === 'accepted' && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {result.certificate_code && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold tracking-wide border border-green-200">
-              <Download className="w-4 h-4" />
-              Sertifikat tersedia
+      <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-gray-100">
+        {result.status === 'accepted' && (
+          <>
+            {result.certificate_code && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold tracking-wide border border-green-200">
+                <Download className="w-4 h-4 shrink-0" />
+                Sertifikat
+              </span>
+            )}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide border border-blue-200">
+              <MessageCircle className="w-4 h-4 shrink-0" />
+              Join WA
             </span>
-          )}
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide border border-blue-200">
-            <MessageCircle className="w-4 h-4" />
-            Join Grup WA
-          </span>
-        </div>
-      )}
+          </>
+        )}
 
-      <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 mt-2 bg-blue-50 inline-block px-3 py-1.5 rounded-md group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
-        <Info className="w-4 h-4" />
-        Tap untuk detail
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-50 text-gray-600 text-xs font-semibold tracking-wide border border-gray-200 group-hover:bg-blue-50 group-hover:text-blue-700 group-hover:border-blue-200 transition-colors ml-auto">
+          <Info className="w-4 h-4 shrink-0" />
+          Tap untuk detail
+        </span>
       </div>
     </button>
   );
@@ -219,38 +219,32 @@ export default function CekStatusPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [results, setResults] = useState<StatusSearchResult[]>([]);
   const [selectedResult, setSelectedResult] = useState<StatusSearchResult | null>(null);
-  const [localRegs, setLocalRegs] = useState<any[]>([]);
-
-  // Load registrations saved in localStorage
-  useEffect(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem('registrations') ?? '[]');
-      setLocalRegs(stored);
-    } catch (_) {}
-  }, []);
 
   async function handleSearch() {
     const q = query.trim().toUpperCase();
     if (q.length < 3) return;
     setIsLoading(true);
     setHasSearched(false);
-    await new Promise((r) => setTimeout(r, 800));
-
-    // Search localStorage registrations first
-    const localMatches = localRegs.filter(
-      (r) => (r.registration_number ?? r.id ?? '').toUpperCase() === q
-    );
-
-    // Also search mock data by id
-    const mockMatches = mockRegistrationResults.filter(
-      (r) => r.id.toUpperCase() === q
-    );
-
-    // Merge, local takes priority
-    const merged = [...localMatches, ...mockMatches];
-    setResults(merged as StatusSearchResult[]);
-    setHasSearched(true);
-    setIsLoading(false);
+    
+    try {
+      const res = await fetch('/api/registrations');
+      const allRegs = await res.json();
+      
+      const matches = allRegs.filter((r: any) => 
+        (r.id || '').toUpperCase() === q ||
+        (r.full_name || '').toUpperCase().includes(q) ||
+        (r.phone || '').includes(q) ||
+        (r.nim || '').includes(q)
+      );
+      
+      setResults(matches);
+    } catch (e) {
+      console.error(e);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+      setHasSearched(true);
+    }
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -285,7 +279,7 @@ export default function CekStatusPage() {
                 <input
                   id="status-search"
                   type="search"
-                  placeholder="Contoh: REG-M3K9XA"
+                  placeholder="Cari Nomor Pendaftaran..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value.toUpperCase())}
                   onKeyDown={handleKeyDown}

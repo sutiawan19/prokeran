@@ -67,19 +67,19 @@ export default function AdminDashboard() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-tight">Dashboard Admin</h1>
-          <p className="text-black/60 font-medium mt-1">Ringkasan aktivitas dan statistik pendaftaran Prokeran.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard Admin</h1>
+          <p className="text-gray-500 font-medium mt-1">Ringkasan aktivitas dan statistik pendaftaran Prokeran.</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-bold text-black/80">Hi, Super Admin</p>
-            <p className="text-xs text-black/50">Last Updated: {lastUpdated}</p>
+            <p className="text-sm font-semibold text-gray-800">Hi, Super Admin</p>
+            <p className="text-xs text-gray-400">Terakhir Diperbarui: {lastUpdated}</p>
           </div>
-          <button className="relative p-2 rounded-full hover:bg-black/5 transition-colors">
-            <Bell className="w-5 h-5 text-black/70" />
+          <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <Bell className="w-5 h-5 text-gray-600" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
           </button>
-          <div className="w-10 h-10 rounded-full bg-[#0038FF] text-white flex items-center justify-center font-bold text-sm">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
             SA
           </div>
         </div>
@@ -87,53 +87,52 @@ export default function AdminDashboard() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 mb-3">
-            <FolderKanban className="w-5 h-5" />
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[11px] font-semibold text-gray-500 tracking-widest uppercase">Total Proker</p>
+            <FolderKanban className="w-4 h-4 text-gray-400" />
           </div>
-          <p className="text-xs font-bold text-black/50 uppercase tracking-wider">Total Proker</p>
-          <h3 className="text-2xl font-black mt-1">{totalProker}</h3>
+          <h3 className="text-3xl font-semibold text-gray-900">{totalProker}</h3>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-          <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 mb-3">
-            <Users className="w-5 h-5" />
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[11px] font-semibold text-gray-500 tracking-widest uppercase">Pendaftar</p>
+            <Users className="w-4 h-4 text-gray-400" />
           </div>
-          <p className="text-xs font-bold text-black/50 uppercase tracking-wider">Pendaftar</p>
-          <h3 className="text-2xl font-black mt-1">{totalPendaftar}</h3>
+          <h3 className="text-3xl font-semibold text-gray-900">{totalPendaftar}</h3>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-          <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600 mb-3">
-            <Clock className="w-5 h-5" />
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[11px] font-semibold text-gray-500 tracking-widest uppercase">Pending</p>
+            <Clock className="w-4 h-4 text-gray-400" />
           </div>
-          <p className="text-xs font-bold text-black/50 uppercase tracking-wider">Pending</p>
-          <h3 className="text-2xl font-black mt-1">{waitingReview}</h3>
+          <h3 className="text-3xl font-semibold text-gray-900">{waitingReview}</h3>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-          <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-600 mb-3">
-            <CheckCircle className="w-5 h-5" />
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[11px] font-semibold text-gray-500 tracking-widest uppercase">Diterima</p>
+            <CheckCircle className="w-4 h-4 text-gray-400" />
           </div>
-          <p className="text-xs font-bold text-black/50 uppercase tracking-wider">Diterima</p>
-          <h3 className="text-2xl font-black mt-1">{accepted}</h3>
+          <h3 className="text-3xl font-semibold text-gray-900">{accepted}</h3>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-black/5 shadow-sm">
-          <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-600 mb-3">
-            <XCircle className="w-5 h-5" />
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-[11px] font-semibold text-gray-500 tracking-widest uppercase">Ditolak</p>
+            <XCircle className="w-4 h-4 text-gray-400" />
           </div>
-          <p className="text-xs font-bold text-black/50 uppercase tracking-wider">Ditolak</p>
-          <h3 className="text-2xl font-black mt-1">{rejected}</h3>
+          <h3 className="text-3xl font-semibold text-gray-900">{rejected}</h3>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart Section */}
-        <div className="bg-white p-6 rounded-2xl border border-black/5 shadow-sm lg:col-span-2">
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-bold text-lg flex items-center gap-2">
-              <Activity className="w-5 h-5 text-black/50" />
+            <h3 className="font-semibold text-base text-gray-900">
               Statistik Pendaftar per Proker
             </h3>
           </div>
@@ -154,73 +153,71 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Activity Section */}
-        <div className="bg-white p-6 rounded-2xl border border-black/5 shadow-sm flex flex-col">
-          <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-            <Bell className="w-5 h-5 text-black/50" />
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+          <h3 className="font-semibold text-base mb-6 text-gray-900">
             Aktivitas Terbaru
           </h3>
           <div className="flex-1 space-y-6">
             {activities.map((activity, index) => (
               <div key={activity.id} className="flex gap-4 relative">
                 {index !== activities.length - 1 && (
-                  <div className="absolute top-8 left-5 bottom-[-24px] w-0.5 bg-gray-100"></div>
+                  <div className="absolute top-8 left-4 bottom-[-24px] w-px bg-gray-200"></div>
                 )}
-                <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${activity.bg} ${activity.color} z-10 relative`}>
-                  <activity.icon className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex-shrink-0 flex items-center justify-center z-10 relative">
+                  <activity.icon className="w-3.5 h-3.5 text-gray-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-black/80">{activity.text}</p>
-                  <p className="text-xs text-black/40 mt-1">{activity.time}</p>
+                  <p className="text-sm font-medium text-gray-800">{activity.text}</p>
+                  <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
                 </div>
               </div>
             ))}
           </div>
-          <button className="w-full mt-6 py-2 text-sm font-bold text-[#0038FF] bg-[#0038FF]/5 rounded-xl hover:bg-[#0038FF]/10 transition-colors">
+          <button className="w-full mt-6 py-2 text-sm font-medium text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-colors">
             Lihat Semua Aktivitas
           </button>
         </div>
       </div>
 
       {/* Recent Applicants Table */}
-      <div className="bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-black/5 flex items-center justify-between">
-          <h3 className="font-bold text-lg flex items-center gap-2">
-            <FileText className="w-5 h-5 text-black/50" />
-            Ringkasan Pendaftar Terbaru
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+          <h3 className="font-semibold text-base text-gray-900">
+            Pendaftar Terbaru
           </h3>
-          <a href="/admin/pendaftar" className="text-sm font-bold text-[#0038FF] hover:underline">
+          <a href="/admin/pendaftar" className="text-sm font-medium text-gray-600 hover:text-gray-900">
             Lihat Semua
           </a>
         </div>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50/50">
-                <TableHead className="font-bold text-black">Nama Lengkap</TableHead>
-                <TableHead className="font-bold text-black">Proker</TableHead>
-                <TableHead className="font-bold text-black">Divisi</TableHead>
-                <TableHead className="font-bold text-black">Tanggal Daftar</TableHead>
-                <TableHead className="font-bold text-black">Status</TableHead>
+              <TableRow className="border-gray-200 hover:bg-transparent">
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Nama Lengkap</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Proker</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Divisi</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Tanggal</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {recentApplicants.length > 0 ? (
                 recentApplicants.map((app) => (
-                  <TableRow key={app.id}>
-                    <TableCell className="font-medium">{app.full_name}</TableCell>
-                    <TableCell className="text-black/70">{app.proker_title}</TableCell>
-                    <TableCell className="text-black/70">{app.division_name}</TableCell>
-                    <TableCell className="text-black/70 text-sm">
+                  <TableRow key={app.id} className="border-gray-200 hover:bg-gray-50/50 transition-colors">
+                    <TableCell className="font-medium text-gray-900 text-sm py-3">{app.full_name}</TableCell>
+                    <TableCell className="text-gray-600 text-sm py-3">{app.proker_title}</TableCell>
+                    <TableCell className="text-gray-600 text-sm py-3">{app.division_name}</TableCell>
+                    <TableCell className="text-gray-500 text-sm py-3">
                       {new Date(app.registered_at).toLocaleDateString('id-ID', {
                         day: 'numeric', month: 'short', year: 'numeric'
                       })}
                     </TableCell>
-                    <TableCell>{getStatusBadge(app.status)}</TableCell>
+                    <TableCell className="py-3">{getStatusBadge(app.status)}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-black/50">
+                  <TableCell colSpan={5} className="text-center py-12 text-gray-400 font-medium bg-gray-50/30">
                     Belum ada pendaftar terbaru.
                   </TableCell>
                 </TableRow>

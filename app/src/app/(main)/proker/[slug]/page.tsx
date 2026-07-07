@@ -1,10 +1,10 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { mockProkers, faqItems } from '@/lib/mock-data';
+import { faqItems } from '@/lib/mock-data';
 import { DivisionCard } from '@/components/public/DivisionCard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -52,15 +52,51 @@ function formatDatetime(dateStr: string | null): string {
 
 export default function DetailProkerPage({ params }: PageProps) {
   const { slug } = use(params);
-  const proker = mockProkers.find((p) => p.slug === slug);
+  const [draftProker, setDraftProker] = useState<any>(null);
+  const [prokers, setProkers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!proker) notFound();
+  useEffect(() => {
+    if (slug === 'preview') {
+      const draft = localStorage.getItem('proker_preview');
+      if (draft) setDraftProker(JSON.parse(draft));
+      setLoading(false);
+    } else {
+      fetch('/api/prokers')
+        .then(res => res.json())
+        .then(data => {
+          setProkers(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setLoading(false);
+        });
+    }
+  }, [slug]);
 
-  const totalQuota = proker.divisions?.reduce((sum, d) => sum + d.quota, 0) ?? 0;
-  const totalFilled = proker.divisions?.reduce((sum, d) => sum + d.filled_quota, 0) ?? 0;
+  if (loading) return <div className="min-h-screen flex items-center justify-center font-bold">Memuat data...</div>;
+
+  let _proker = prokers.find((p) => p.slug === slug);
+
+  if (slug === 'preview') {
+    if (draftProker) {
+      _proker = draftProker;
+    } else {
+      return <div className="min-h-screen flex items-center justify-center font-bold">Memuat Preview...</div>;
+    }
+  } else if (!_proker) {
+    notFound();
+  }
+
+  // Safe checks since proker is now guaranteed if we pass the block above
+  const proker = _proker as any;
+
+  const totalQuota = proker.divisions?.reduce((sum: number, d: any) => sum + d.quota, 0) ?? 0;
+  const totalFilled = proker.divisions?.reduce((sum: number, d: any) => sum + (d.filled_quota || 0), 0) ?? 0;
   const divCount = proker.divisions?.length ?? 0;
   const isOpen = proker.status === 'ongoing';
-  const benefits = proker.benefits?.split('\n').filter(Boolean) ?? [];
+  const benefits = proker.benefits ? proker.benefits.split('\n').filter(Boolean) : [];
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
@@ -150,7 +186,7 @@ export default function DetailProkerPage({ params }: PageProps) {
                   <h2 className="text-2xl font-bold mb-6 text-gray-900">Divisi Tersedia</h2>
                   {proker.divisions && proker.divisions.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {proker.divisions.map((div) => (
+                      {proker.divisions.map((div: any) => (
                         <DivisionCard
                           key={div.id}
                           division={div}
@@ -171,7 +207,7 @@ export default function DetailProkerPage({ params }: PageProps) {
                   <h2 className="text-2xl font-bold mb-6 text-gray-900">Benefit Mengikuti {proker.title}</h2>
                   {benefits.length > 0 ? (
                     <ul className="space-y-4">
-                      {benefits.map((benefit, i) => (
+                      {benefits.map((benefit: string, i: number) => (
                         <li key={i} className="flex items-start gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
                           <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                           <span className="text-gray-700">{benefit}</span>
@@ -188,7 +224,7 @@ export default function DetailProkerPage({ params }: PageProps) {
                   <h2 className="text-2xl font-bold mb-6 text-gray-900">Dokumentasi Kegiatan</h2>
                   {proker.documentation && proker.documentation.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {proker.documentation.map((doc, i) => (
+                      {proker.documentation.map((doc: any, i: number) => (
                         <div key={i} className="relative aspect-video rounded-2xl overflow-hidden group border border-gray-100">
                           <Image
                             src={doc.url}

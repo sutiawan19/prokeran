@@ -255,36 +255,34 @@ function DaftarForm({ slug }: { slug: string }) {
 
   async function handleSubmit() {
     setIsSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    const regId = `REG-${Date.now().toString(36).toUpperCase()}`;
-
-    // Save to localStorage so cek-status can look it up
-    const saved = {
-      id: regId,
-      registration_number: regId,
+    
+    const payload = {
       full_name: formData.full_name,
       nim: formData.nim,
       phone: formData.phone,
-      phone_masked: formData.phone
-        ? formData.phone.replace(/.(?=.{4})/g, '•')
-        : '',
       proker_title: proker.title,
-      proker_slug: slug,
       division_name: selectedDivision?.name ?? '',
-      status: 'pending',
-      registered_at: new Date().toISOString(),
-      proker_status: proker.status ?? 'ongoing',
-      certificate_code: undefined,
+      motivation: formData.general_motivation + '\n' + formData.motivation,
+      organization_experience: formData.organization_experience,
     };
-    try {
-      const existing = JSON.parse(localStorage.getItem('registrations') ?? '[]');
-      existing.push(saved);
-      localStorage.setItem('registrations', JSON.stringify(existing));
-    } catch (_) {}
 
-    setRegistrationId(regId);
-    setIsSubmitting(false);
-    setSuccessModalOpen(true);
+    try {
+      const res = await fetch('/api/registrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!res.ok) throw new Error('Registration failed');
+      const data = await res.json();
+      setRegistrationId(data.id || `REG-${Date.now().toString(36).toUpperCase()}`);
+      setSuccessModalOpen(true);
+    } catch (e) {
+      console.error(e);
+      toast.error('Gagal mengirim pendaftaran');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // Common input styling

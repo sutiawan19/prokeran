@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { Plus, Edit, Trash, Eye, Search, Filter, ArrowUpDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Edit, Trash, Eye, Search, Filter, ArrowUpDown, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,12 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   Table,
   TableBody,
@@ -33,25 +27,63 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { mockProkers as globalMockProkers } from '@/lib/mock-data';
 import { ProkerStatus } from '@/types';
 import { useRouter } from 'next/navigation';
 
-// Map global mock data
-const initialProkers = globalMockProkers.map((p, index) => ({
-  id: index + 1,
-  title: p.title,
-  slug: p.slug,
-  status: p.status,
-  startDate: p.start_date,
-  endDate: p.end_date,
-  divisions: p.divisions?.length || 0,
-  applicants: p.divisions?.reduce((acc, div) => acc + (div.filled_quota || 0), 0) || 0,
-}));
+export interface ProkerData {
+  id: string;
+  title: string;
+  slug: string;
+  status: ProkerStatus;
+  description: string;
+  banner_url: string;
+  startDate: string;
+  endDate: string;
+  registration_close: string;
+  benefits: string;
+  documentation: string;
+  divisions: number;
+  applicants: number;
+}
 
 export default function KelolaProkerPage() {
   const router = useRouter();
-  const [prokers, setProkers] = useState(initialProkers);
+  const [prokers, setProkers] = useState<ProkerData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProkers();
+  }, []);
+
+  const fetchProkers = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch('/api/prokers');
+      if (!res.ok) throw new Error('Failed to fetch prokers');
+      const data = await res.json();
+      
+      const mappedData = data.map((p: any, index: number) => ({
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        status: p.status,
+        description: p.description || '',
+        banner_url: p.banner_url || '',
+        startDate: p.start_date || '',
+        endDate: p.end_date || '',
+        registration_close: p.registration_close || '',
+        benefits: p.benefits || '',
+        documentation: typeof p.documentation === 'string' ? p.documentation : JSON.stringify(p.documentation || []),
+        divisions: p.divisions?.length || 0,
+        applicants: 0,
+      }));
+      setProkers(mappedData);
+    } catch (error) {
+      console.error('Failed to load prokers:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   // Filters & Sorting
   const [searchQuery, setSearchQuery] = useState('');
@@ -61,26 +93,6 @@ export default function KelolaProkerPage() {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  // Dialogs
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  
-  const [formData, setFormData] = useState<{
-    title: string;
-    status: ProkerStatus;
-    startDate: string;
-    endDate: string;
-    divisions: number;
-    applicants: number;
-  }>({
-    title: '',
-    status: 'upcoming',
-    startDate: '',
-    endDate: '',
-    divisions: 0,
-    applicants: 0,
-  });
 
   // Summaries
   const totalUpcoming = prokers.filter(p => p.status === 'upcoming').length;
@@ -98,8 +110,7 @@ export default function KelolaProkerPage() {
     switch(sortBy) {
       case 'name-asc': return a.title.localeCompare(b.title);
       case 'name-desc': return b.title.localeCompare(a.title);
-      case 'applicants-desc': return b.applicants - a.applicants;
-      case 'applicants-asc': return a.applicants - b.applicants;
+      // Removed applicants sorting since the field is gone in MVP, or keep fallback
       case 'period-desc': return new Date(b.startDate || 0).getTime() - new Date(a.startDate || 0).getTime();
       default: return 0;
     }
@@ -108,43 +119,34 @@ export default function KelolaProkerPage() {
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const paginatedData = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  // Dialogs
   const handleOpenAddDialog = () => {
-    setEditingId(null);
-    setFormData({ title: '', status: 'upcoming', startDate: '', endDate: '', divisions: 0, applicants: 0 });
-    setIsDialogOpen(true);
+    router.push('/admin/proker/create');
   };
 
-  const handleOpenEditDialog = (proker: typeof initialProkers[0]) => {
-    setEditingId(proker.id);
-    setFormData({
-      title: proker.title,
-      status: proker.status,
-      startDate: proker.startDate || '',
-      endDate: proker.endDate || '',
-      divisions: proker.divisions,
-      applicants: proker.applicants,
-    });
-    setIsDialogOpen(true);
+  const handleOpenEditDialog = (proker: ProkerData) => {
+    router.push(`/admin/proker/create?id=${proker.id}`);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('PERINGATAN: Apakah Anda yakin ingin menghapus proker ini? Tindakan ini tidak dapat dibatalkan.')) {
-      setProkers(prokers.filter(p => p.id !== id));
-      if (paginatedData.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
+      try {
+        const res = await fetch(`/api/prokers?id=${id}`, {
+          method: 'DELETE',
+        });
+        if (res.ok) {
+          setProkers(prokers.filter(p => p.id !== id));
+          if (paginatedData.length === 1 && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+          }
+        } else {
+          alert('Gagal menghapus data.');
+        }
+      } catch (error) {
+        console.error('Failed to delete proker:', error);
+        alert('Terjadi kesalahan saat menghapus data.');
       }
     }
-  };
-
-  const handleSave = () => {
-    if (editingId) {
-      setProkers(prokers.map(p => p.id === editingId ? { ...p, ...formData } : p));
-    } else {
-      const newId = prokers.length > 0 ? Math.max(...prokers.map(p => p.id)) + 1 : 1;
-      const slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-      setProkers([{ ...formData, id: newId, slug }, ...prokers]);
-    }
-    setIsDialogOpen(false);
   };
 
   const getStatusBadge = (status: string) => {
@@ -160,8 +162,8 @@ export default function KelolaProkerPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-tight">Kelola Proker</h1>
-          <p className="text-black/60 font-medium mt-1">Atur dan pantau semua program kerja organisasi.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Kelola Proker</h1>
+          <p className="text-gray-500 font-medium mt-1">Atur dan pantau semua program kerja organisasi.</p>
         </div>
         <Button 
           className="bg-[#0038FF] hover:bg-[#0038FF]/90 text-white font-bold h-12 px-6 rounded-xl shadow-sm"
@@ -174,48 +176,48 @@ export default function KelolaProkerPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-black/5 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-black/50 uppercase">Semua Proker</p>
-            <h3 className="text-xl font-black mt-1">{prokers.length}</h3>
+            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Semua Proker</p>
+            <h3 className="text-2xl font-semibold text-gray-900 mt-1">{prokers.length}</h3>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-blue-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-blue-500 uppercase">Sedang Berjalan</p>
-            <h3 className="text-xl font-black mt-1">{totalOngoing}</h3>
+            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Sedang Berjalan</p>
+            <h3 className="text-2xl font-semibold text-gray-900 mt-1">{totalOngoing}</h3>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-yellow-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-yellow-600 uppercase">Akan Datang</p>
-            <h3 className="text-xl font-black mt-1">{totalUpcoming}</h3>
+            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Akan Datang</p>
+            <h3 className="text-2xl font-semibold text-gray-900 mt-1">{totalUpcoming}</h3>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-green-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-green-600 uppercase">Selesai</p>
-            <h3 className="text-xl font-black mt-1">{totalCompleted}</h3>
+            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Selesai</p>
+            <h3 className="text-2xl font-semibold text-gray-900 mt-1">{totalCompleted}</h3>
           </div>
         </div>
       </div>
 
       {/* Filters & Actions */}
-      <div className="bg-white p-4 rounded-2xl border shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input 
             placeholder="Cari nama proker..." 
-            className="pl-10 h-10 rounded-xl bg-gray-50 border-transparent focus:bg-white focus:border-[#0038FF]/50 transition-all"
+            className="pl-9 h-10 rounded-lg bg-gray-50/50 border-gray-200 focus-visible:ring-1 focus-visible:ring-blue-500 transition-all text-sm text-gray-900"
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
           />
         </div>
         
-        <div className="flex w-full md:w-auto gap-2">
+        <div className="flex w-full md:w-auto gap-3">
           <Select value={statusFilter} onValueChange={(val) => { if (val !== null) { setStatusFilter(val); setCurrentPage(1); } }}>
-            <SelectTrigger className="w-[160px] h-10 bg-gray-50 border-transparent rounded-xl">
-              <Filter className="w-4 h-4 mr-2 text-black/50" />
+            <SelectTrigger className="w-[160px] h-10 bg-gray-50/50 border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 font-medium text-sm text-gray-700">
+              <Filter className="w-4 h-4 mr-2 text-gray-400" />
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -227,8 +229,8 @@ export default function KelolaProkerPage() {
           </Select>
 
           <Select value={sortBy} onValueChange={(val) => { if (val !== null) setSortBy(val); }}>
-            <SelectTrigger className="w-[180px] h-10 bg-gray-50 border-transparent rounded-xl">
-              <ArrowUpDown className="w-4 h-4 mr-2 text-black/50" />
+            <SelectTrigger className="w-[180px] h-10 bg-gray-50/50 border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 font-medium text-sm text-gray-700">
+              <ArrowUpDown className="w-4 h-4 mr-2 text-gray-400" />
               <SelectValue placeholder="Urutkan" />
             </SelectTrigger>
             <SelectContent>
@@ -242,33 +244,45 @@ export default function KelolaProkerPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white border rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-gray-50/50">
-              <TableRow>
-                <TableHead className="font-bold text-black py-4 pl-6">Nama Proker</TableHead>
-                <TableHead className="font-bold text-black py-4">Status</TableHead>
-                <TableHead className="font-bold text-black py-4">Periode</TableHead>
-                <TableHead className="font-bold text-black py-4">Divisi</TableHead>
-                <TableHead className="font-bold text-black py-4">Pendaftar</TableHead>
-                <TableHead className="font-bold text-black py-4 text-right pr-6">Aksi</TableHead>
+            <TableHeader>
+              <TableRow className="border-gray-200 hover:bg-transparent">
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10 pl-4">Nama Proker</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Status</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Periode</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Divisi</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10">Pendaftar</TableHead>
+                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider h-10 text-right pr-4">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-32 text-center">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-500" />
+                    <p className="mt-2 text-gray-500 font-medium">Memuat data dari sistem...</p>
+                  </TableCell>
+                </TableRow>
+              ) : (
               <TooltipProvider>
                 {paginatedData.map((proker) => (
-                  <TableRow key={proker.id} className="hover:bg-gray-50">
-                    <TableCell className="font-bold pl-6 py-4">{proker.title}</TableCell>
-                    <TableCell className="py-4">{getStatusBadge(proker.status)}</TableCell>
-                    <TableCell className="text-sm font-medium text-black/70 py-4">
+                  <TableRow key={proker.id} className="border-gray-200 hover:bg-gray-50/50 transition-colors">
+                    <TableCell className="font-medium text-gray-900 pl-4 py-3 text-sm">{proker.title}</TableCell>
+                    <TableCell className="py-3">{getStatusBadge(proker.status)}</TableCell>
+                    <TableCell className="text-sm font-medium text-gray-500 py-3">
                       {proker.startDate ? new Date(proker.startDate).toLocaleDateString('id-ID', {day:'numeric', month:'short'}) : '-'} 
                       {' - '} 
                       {proker.endDate ? new Date(proker.endDate).toLocaleDateString('id-ID', {day:'numeric', month:'short'}) : '-'}
                     </TableCell>
-                    <TableCell className="py-4 font-bold">{proker.divisions}</TableCell>
-                    <TableCell className="py-4 font-bold">{proker.applicants}</TableCell>
-                    <TableCell className="text-right pr-6 py-4">
+                    <TableCell className="py-3 text-sm text-gray-600 font-medium">
+                      {proker.divisions} Divisi
+                    </TableCell>
+                    <TableCell className="py-3 text-sm text-gray-600 font-medium">
+                      {proker.applicants} Orang
+                    </TableCell>
+                    <TableCell className="text-right pr-4 py-3">
                       <div className="flex justify-end gap-2">
                         <Tooltip>
                           <TooltipTrigger render={<span className="inline-flex" />}>
@@ -316,6 +330,7 @@ export default function KelolaProkerPage() {
                   </TableRow>
                 ))}
               </TooltipProvider>
+              )}
               {paginatedData.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} className="h-32 text-center text-black/50 font-medium">
@@ -366,63 +381,6 @@ export default function KelolaProkerPage() {
         )}
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{editingId ? 'Edit Proker' : 'Tambah Proker'}</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Nama Proker</Label>
-              <Input 
-                id="title" 
-                value={formData.title} 
-                onChange={(e) => setFormData({...formData, title: e.target.value})} 
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="status">Status</Label>
-              <Select 
-                value={formData.status} 
-                onValueChange={(val) => { if (val !== null) setFormData({...formData, status: val as ProkerStatus}); }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="upcoming">Akan Datang</SelectItem>
-                  <SelectItem value="ongoing">Sedang Berjalan</SelectItem>
-                  <SelectItem value="completed">Selesai</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="startDate">Tanggal Mulai</Label>
-                <Input 
-                  id="startDate" 
-                  type="date"
-                  value={formData.startDate} 
-                  onChange={(e) => setFormData({...formData, startDate: e.target.value})} 
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="endDate">Tanggal Selesai</Label>
-                <Input 
-                  id="endDate" 
-                  type="date"
-                  value={formData.endDate} 
-                  onChange={(e) => setFormData({...formData, endDate: e.target.value})} 
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-end gap-3 mt-4">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Batal</Button>
-            <Button className="bg-[#0038FF] hover:bg-[#0038FF]/90 text-white font-bold" onClick={handleSave}>Simpan</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
