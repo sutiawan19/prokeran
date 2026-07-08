@@ -3,7 +3,10 @@ import path from 'path';
 import { Proker, StatusSearchResult } from '@/types';
 import { mockProkers, mockRegistrationResults } from './mock-data';
 
-const dataFilePath = path.join(process.cwd(), 'data.json');
+const isVercel = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+const dataFilePath = isVercel 
+  ? path.join('/tmp', 'data.json') 
+  : path.join(process.cwd(), 'data.json');
 
 export interface Database {
   prokers: Proker[];
