@@ -211,7 +211,7 @@ export default function LandingPage() {
         
         {/* Circular Badge - Moved outside to guarantee absolute positioning relative to main */}
         <div className="absolute bottom-8 right-4 md:bottom-[10%] md:right-[5%] z-40 pointer-events-auto">
-          <Link href="#proker">
+          <Link href="/cek-status">
             <CircularBadge />
           </Link>
         </div>
