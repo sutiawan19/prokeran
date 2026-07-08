@@ -8,7 +8,7 @@ Prokeran adalah platform inovatif berbasis web yang dirancang khusus untuk mempe
 - **Landing Page Interaktif**: Menampilkan informasi proker aktif dengan desain *Neo-Brutalist* yang menarik.
 - **Pendaftaran Tanpa Login**: Calon peserta dapat langsung mendaftar ke divisi proker yang diminati dengan form yang cepat dan responsif.
 - **Lacak Status Pendaftaran**: Peserta mendapatkan Nomor Pendaftaran (*Tracking ID*) unik setelah mendaftar dan dapat menggunakannya untuk mengecek status seleksi (Menunggu, Diterima, Ditolak).
-- **Aksi Cepat**: Notifikasi instan, tautan ke Grup WhatsApp, serta akses pengunduhan e-sertifikat jika diterima.
+- **Aksi Cepat**: Notifikasi instan, tautan ke Grup WhatsApp.
 
 ### 2. Dashboard Admin (Pengurus UKM)
 - **Manajemen Proker (CRUD)**: Admin dapat menambah, mengubah, melihat, dan menghapus program kerja.
@@ -29,6 +29,8 @@ Proyek ini dibangun menggunakan teknologi web modern untuk memastikan performa y
 - **Animasi & Interaksi**: [Framer Motion](https://www.framer.com/motion/)
 - **Ikonografi**: [Lucide React](https://lucide.dev/)
 - **Database/Penyimpanan**: *Local JSON Store* (`data.json`) dan *Mock Database Utility* (sebagai simulasi *database* ringan).
+- **Software Code**: Antigravity
+- **AI Tools**: Claude & Gemini
 
 ---
 
@@ -36,12 +38,11 @@ Proyek ini dibangun menggunakan teknologi web modern untuk memastikan performa y
 
 Proyek UAS ini dikembangkan oleh:
 
-1. **[Nama Anggota 1]** - [NIM Anggota 1]
-2. **[Nama Anggota 2]** - [NIM Anggota 2]
-3. **[Nama Anggota 3]** - [NIM Anggota 3]
-4. **[Nama Anggota 4]** - [NIM Anggota 4]
+1. **Athiyya Salsabila Hermawan** - 240160221053
+2. **Rasya Putri Ramadhani** - 240160221055
+3. **Salwa Ananda Rachmat** - 240160221043
+4. **Sutiawan** - 240160221046
 
-*(Catatan: Silakan ubah bagian [Nama] dan [NIM] di atas sesuai dengan identitas asli kelompok Anda).*
 
 ---
 
