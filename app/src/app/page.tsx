@@ -157,7 +157,7 @@ export default function LandingPage() {
             <motion.div 
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative md:absolute md:bottom-[5%] md:left-[20%] z-40 pointer-events-auto w-full px-4 md:px-0 md:w-auto"
+              className="relative md:absolute md:bottom-[-25%] md:left-[-5%] z-40 pointer-events-auto w-full px-4 md:px-0 md:w-auto"
             >
               <div className="w-full md:w-[420px] bg-white/20 backdrop-blur-md border border-white/40 rounded-[2rem] p-5 shadow-2xl md:rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
                 <h3 className="text-white font-bold mb-3 text-lg">Cek Status Pendaftaran</h3>
@@ -183,7 +183,7 @@ export default function LandingPage() {
             <motion.div 
               animate={{ y: [0, -20, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="relative md:absolute md:top-[15%] md:right-[22%] z-30 pointer-events-auto hidden sm:block"
+              className="relative md:absolute md:top-[5%] md:right-[-15%] z-30 pointer-events-auto hidden sm:block"
             >
               <div className="w-40 md:w-52 aspect-[3/3.5] bg-white/20 backdrop-blur-md border border-white/40 rounded-[2rem] p-5 flex flex-col items-center justify-center md:rotate-[12deg] shadow-2xl hover:rotate-0 transition-transform duration-500">
                 <div className="w-16 h-16 md:w-24 md:h-24 bg-[#CCFF00] rounded-full flex items-center justify-center mb-4 shadow-inner border-[3px] border-white/50 overflow-hidden text-4xl">
@@ -206,14 +206,14 @@ export default function LandingPage() {
               <ArrowGreenRight />
             </div>
 
-            {/* Circular Badge */}
-            <div className="relative md:absolute md:bottom-[-10%] md:right-[15%] z-40 pointer-events-auto">
-              <Link href="#proker">
-                <CircularBadge />
-              </Link>
-            </div>
-
           </div>
+        </div>
+        
+        {/* Circular Badge - Moved outside to guarantee absolute positioning relative to main */}
+        <div className="absolute bottom-8 right-4 md:bottom-[10%] md:right-[5%] z-40 pointer-events-auto">
+          <Link href="#proker">
+            <CircularBadge />
+          </Link>
         </div>
       </main>
 
